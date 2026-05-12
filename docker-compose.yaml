@@ -39,10 +39,10 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
-    # Zamiast ports: - '${PORT:-7126}:7126' ruch przejdzie przez Traefika
     environment:
       NODE_ENV: production
       PORT: 7126
+      # Te adresy zadziałają dzięki automatycznej sieci w Coolify
       DATABASE_URL: 'postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/it_portal'
       REDIS_URL: 'redis://redis:6379'
       SESSION_SECRET: '${SESSION_SECRET:-dev-secret-CHANGE-IN-PRODUCTION-abc123xyz789}'
@@ -51,23 +51,13 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    networks:
-      - coolify
-      - default
     labels:
       - "traefik.enable=true"
-   
       - "traefik.http.routers.app.rule=Host(`itciekawostki2.amniscode.dev`)"
-      #
       - "traefik.http.services.app.loadbalancer.server.port=7126"
-     
-      - "traefik.docker.network=coolify"
 
 volumes:
   pgdata: null
   redisdata: null
 
-# Podpinamy kontener do sieci coolify (gdzie działa proxy Traefik)
-networks:
-  coolify:
-    external: true
+# USUNIĘTE: Sekcja definiująca sieci (networks) na samym dole pliku
