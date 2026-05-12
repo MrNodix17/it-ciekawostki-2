@@ -1,0 +1,68 @@
+<%- include('../partials/head', {title: article.title}) %>
+<%- include('../partials/nav', {currentPage: 'articles'}) %>
+<div class="container">
+  <div class="article-header">
+    <div class="card-category" style="margin-bottom:var(--space-3)"><%= article.category %></div>
+    <div style="font-size:3rem;margin-bottom:var(--space-4)"><%= article.cover_emoji || '💡' %></div>
+    <h1 style="font-family:var(--font-display);font-size:var(--text-xl);letter-spacing:-0.02em;max-width:25ch;margin-bottom:var(--space-4)"><%= article.title %></h1>
+    <div style="display:flex;align-items:center;gap:var(--space-4);font-size:var(--text-xs);color:var(--color-text-faint)">
+      <span>👁 <%= article.views_count %> wyświetleń</span>
+      <span>❤️ <span id="like-count"><%= likesCount || 0 %></span> polubień</span>
+    </div>
+    <div class="card-tags" style="margin-top:var(--space-4)">
+      <% if(article.tags){ article.tags.forEach(function(tag){ %><span class="tag">#<%= tag %></span><% }); } %>
+    </div>
+  </div>
+  <div class="article-body">
+    <% article.content.split('\n\n').forEach(function(para){ %>
+    <p><%= para %></p>
+    <% }); %>
+  </div>
+  <!-- Like -->
+  <% if (user) { %>
+  <div style="margin-top:var(--space-8)">
+    <button class="like-btn <%= liked ? 'liked' : '' %>" id="like-btn" data-id="<%= article.id %>">
+      ❤️ <span><%= liked ? 'Lubisz to' : 'Polub' %></span>
+    </button>
+  </div>
+  <% } %>
+  <div class="divider" style="margin-top:var(--space-8)"></div>
+  <!-- Komentarze -->
+  <div style="margin-top:var(--space-8)">
+    <h2 class="section-title" style="margin-bottom:var(--space-6)">💬 Komentarze (<%= comments.length %>)</h2>
+    <% if (user) { %>
+    <form action="/api/artykul/<%= article.id %>/komentarz" method="POST" style="margin-bottom:var(--space-8)">
+      <div class="form-group">
+        <label class="form-label">Twój komentarz</label>
+        <textarea class="form-input" name="content" rows="3" placeholder="Podziel się opinią..." required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Dodaj komentarz</button>
+    </form>
+    <% } else { %>
+    <div class="flash flash-info" style="margin-bottom:var(--space-6)"><a href="/auth/login">Zaloguj się</a>, żeby komentować.</div>
+    <% } %>
+    <% comments.forEach(function(c){ %>
+    <div class="comment">
+      <span class="comment-author"><%= c.display_name || c.username %></span>
+      <span class="comment-date"><%= new Date(c.created_at).toLocaleDateString('pl-PL') %></span>
+      <div class="comment-body"><%= c.content %></div>
+    </div>
+    <% }); %>
+    <% if (comments.length === 0) { %>
+    <div class="empty"><div class="empty-icon">💬</div><h3>Brak komentarzy</h3><p>Bądź pierwszy!</p></div>
+    <% } %>
+  </div>
+</div>
+<script>
+var btn=document.getElementById('like-btn');
+if(btn){btn.addEventListener('click',function(){
+  fetch('/api/artykul/'+btn.dataset.id+'/like',{method:'POST',headers:{'Content-Type':'application/json'}})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    document.getElementById('like-count').textContent=d.likes;
+    btn.classList.toggle('liked',d.liked);
+    btn.querySelector('span').textContent=d.liked?'Lubisz to':'Polub';
+  });
+});}
+</script>
+<%- include('../partials/footer') %>

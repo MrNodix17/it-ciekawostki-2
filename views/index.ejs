@@ -1,0 +1,59 @@
+<%- include('partials/head', {title: 'Strona główna'}) %>
+<%- include('partials/nav', {currentPage: 'home'}) %>
+<main>
+  <div class="hero">
+    <div class="container">
+      <div class="hero-label">✦ Najnowsze z IT</div>
+      <h1>Ciekawostki IT dla <span>profesjonalistów</span></h1>
+      <p>DevOps, bazy danych, sieci, bezpieczeństwo — najlepsze artykuły w jednym miejscu.</p>
+      <div class="hero-actions">
+        <a href="/artykuly" class="btn btn-primary">📚 Przeglądaj artykuły</a>
+        <% if (!user) { %><a href="/auth/register" class="btn btn-secondary">Dołącz bezpłatnie</a><% } %>
+      </div>
+    </div>
+  </div>
+
+  <div class="container section">
+    <%- include('partials/flash') %>
+    <div class="section-header">
+      <h2 class="section-title">Najnowsze artykuły</h2>
+      <a href="/artykuly" class="section-link">Wszystkie →</a>
+    </div>
+    <% if (articles && articles.length > 0) { %>
+    <div class="articles-grid">
+      <% articles.forEach(function(a) { %>
+      <article class="card">
+        <div class="card-emoji"><%= a.cover_emoji || '💡' %></div>
+        <div class="card-category"><%= a.category %></div>
+        <h3 class="card-title"><a href="/artykuly/<%= a.slug %>"><%= a.title %></a></h3>
+        <p class="card-excerpt"><%= a.excerpt %></p>
+        <div class="card-tags">
+          <% if(a.tags){ a.tags.slice(0,3).forEach(function(tag){ %><span class="tag">#<%= tag %></span><% }); } %>
+        </div>
+        <div class="card-meta">
+          <span>👁 <%= a.views || 0 %></span>
+          <span>❤️ <%= 0 %></span>
+        </div>
+      </article>
+      <% }); %>
+    </div>
+    <% } else { %>
+    <div class="empty">
+      <div class="empty-icon">📭</div>
+      <h3>Brak artykułów</h3>
+      <p>Wróć wkrótce — nowe ciekawostki pojawią się niebawem.</p>
+    </div>
+    <% } %>
+  </div>
+
+  <% if (!user) { %>
+  <div class="container" style="padding-bottom:var(--space-20)">
+    <div class="newsletter-banner">
+      <h3>Dołącz do społeczności</h3>
+      <p>Załóż konto, subskrybuj newsletter i dodaj znajomych – za darmo.</p>
+      <a href="/auth/register" class="btn btn-primary">Utwórz bezpłatne konto</a>
+    </div>
+  </div>
+  <% } %>
+</main>
+<%- include('partials/footer') %>

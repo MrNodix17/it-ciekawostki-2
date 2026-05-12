@@ -1,0 +1,105 @@
+<%- include('partials/head', {title: 'Dashboard'}) %>
+<%- include('partials/nav', {currentPage: 'dashboard'}) %>
+<div class="container-wide">
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside>
+      <div class="sidebar-card">
+        <div class="sidebar-avatar"><%= user.display_name ? user.display_name[0].toUpperCase() : user.username[0].toUpperCase() %></div>
+        <div class="sidebar-username"><%= user.display_name || user.username %></div>
+        <div class="sidebar-email"><%= user.email %></div>
+        <div class="divider"></div>
+        <ul class="sidebar-nav">
+          <li><a href="/dashboard" class="active">🏠 Dashboard</a></li>
+          <li><a href="/newsletter/status">📬 Newsletter</a></li>
+          <li><a href="/users/szukaj">🔍 Szukaj znajomych</a></li>
+          <li><a href="/users/<%= user.username %>">👤 Mój profil</a></li>
+        </ul>
+      </div>
+    </aside>
+    <!-- Main content -->
+    <div>
+      <%- include('partials/flash') %>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value"><%= friendsCount || 0 %></div>
+          <div class="stat-label">Znajomi</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value"><%= pendingCount || 0 %></div>
+          <div class="stat-label">Oczekujące</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value"><%= newsletterStatus ? '✓' : '✗' %></div>
+          <div class="stat-label">Newsletter</div>
+        </div>
+      </div>
+
+      <!-- Newsletter -->
+      <div class="newsletter-banner" style="text-align:left">
+        <h3>📬 Newsletter</h3>
+        <% if (newsletterStatus) { %>
+          <p>Jesteś zapisany/a do newslettera. Otrzymujesz powiadomienia o nowych artykułach.</p>
+          <form action="/newsletter/wypisz" method="POST">
+            <button class="btn btn-secondary btn-sm">Wypisz się</button>
+          </form>
+        <% } else { %>
+          <p>Zapisz się na newsletter i bądź na bieżąco z najnowszymi ciekawostkami IT.</p>
+          <form action="/newsletter/zapisz" method="POST">
+            <button class="btn btn-primary">Zapisz się na newsletter</button>
+          </form>
+        <% } %>
+      </div>
+
+      <!-- Oczekujące zaproszenia -->
+      <% if (pendingRequests && pendingRequests.length > 0) { %>
+      <div class="section-header"><h2 class="section-title">🔔 Zaproszenia do znajomych</h2></div>
+      <div class="friends-grid" style="margin-bottom:var(--space-8)">
+        <% pendingRequests.forEach(function(r){ %>
+        <div class="friend-card">
+          <div class="friend-avatar"><%= r.username[0].toUpperCase() %></div>
+          <div class="friend-name"><%= r.display_name || r.username %></div>
+          <span class="badge badge-pending">Oczekuje</span>
+          <div style="display:flex;gap:8px">
+            <form action="/users/znajomy/akceptuj" method="POST">
+              <input type="hidden" name="requesterId" value="<%= r.id %>">
+              <button class="btn btn-primary btn-sm">Akceptuj</button>
+            </form>
+            <form action="/users/znajomy/odrzuc" method="POST">
+              <input type="hidden" name="requesterId" value="<%= r.id %>">
+              <button class="btn btn-secondary btn-sm">Odrzuć</button>
+            </form>
+          </div>
+        </div>
+        <% }); %>
+      </div>
+      <% } %>
+
+      <!-- Znajomi -->
+      <div class="section-header">
+        <h2 class="section-title">👥 Znajomi (<%= friendsCount || 0 %>)</h2>
+        <a href="/users/szukaj" class="section-link">+ Dodaj znajomego</a>
+      </div>
+      <% if (friends && friends.length > 0) { %>
+      <div class="friends-grid">
+        <% friends.forEach(function(f){ %>
+        <div class="friend-card">
+          <div class="friend-avatar"><%= f.username[0].toUpperCase() %></div>
+          <div class="friend-name"><%= f.display_name || f.username %></div>
+          <span class="badge badge-accepted">Znajomy</span>
+          <a href="/users/<%= f.username %>" class="btn btn-ghost btn-sm">Profil</a>
+        </div>
+        <% }); %>
+      </div>
+      <% } else { %>
+      <div class="empty">
+        <div class="empty-icon">👥</div>
+        <h3>Brak znajomych</h3>
+        <p>Znajdź innych użytkowników i dodaj ich do znajomych.</p>
+        <a href="/users/szukaj" class="btn btn-primary">Szukaj użytkowników</a>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+<%- include('partials/footer') %>

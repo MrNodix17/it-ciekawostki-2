@@ -1,0 +1,10 @@
+<%- include('partials/head', {title: 'Błąd ' + code}) %>
+<%- include('partials/nav', {currentPage: ''}) %>
+<div style="min-height:60vh;display:flex;align-items:center;justify-content:center">
+  <div style="text-align:center;padding:var(--space-16)">
+    <div style="font-family:var(--font-display);font-size:var(--text-2xl);color:var(--color-primary);margin-bottom:var(--space-4)"><%= code %></div>
+    <h1 style="font-size:var(--text-lg);margin-bottom:var(--space-4)"><%= message %></h1>
+    <a href="/" class="btn btn-primary">Wróć na stronę główną</a>
+  </div>
+</div>
+<%- include('partials/footer') %>

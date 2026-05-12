@@ -1,0 +1,35 @@
+<%- include('../partials/head', {title: 'Szukaj użytkowników'}) %>
+<%- include('../partials/nav', {currentPage: 'users'}) %>
+<div class="container section">
+  <%- include('../partials/flash') %>
+  <h1 class="section-title" style="margin-bottom:var(--space-6)">🔍 Szukaj użytkowników</h1>
+  <form action="/users/szukaj" method="GET" class="search-box">
+    <input class="form-input" type="text" name="q" value="<%= query || '' %>" placeholder="Wpisz nazwę użytkownika...">
+    <button class="btn btn-primary">Szukaj</button>
+  </form>
+  <% if (users && users.length > 0) { %>
+  <div class="friends-grid">
+    <% users.forEach(function(u){ %>
+    <div class="friend-card">
+      <div class="friend-avatar"><%= u.username[0].toUpperCase() %></div>
+      <div class="friend-name"><%= u.display_name || u.username %></div>
+      <div style="font-size:var(--text-xs);color:var(--color-text-faint)">@<%= u.username %></div>
+      <a href="/users/<%= u.username %>" class="btn btn-secondary btn-sm">Profil</a>
+      <% if (user && user.id !== u.id) { %>
+      <form action="/users/znajomy/dodaj" method="POST">
+        <input type="hidden" name="targetId" value="<%= u.id %>">
+        <button class="btn btn-primary btn-sm">+ Dodaj</button>
+      </form>
+      <% } %>
+    </div>
+    <% }); %>
+  </div>
+  <% } else if (query) { %>
+  <div class="empty">
+    <div class="empty-icon">🔍</div>
+    <h3>Brak wyników</h3>
+    <p>Nie znaleziono użytkownika "<%= query %>".</p>
+  </div>
+  <% } %>
+</div>
+<%- include('../partials/footer') %>

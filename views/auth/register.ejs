@@ -1,0 +1,30 @@
+<%- include('../partials/head', {title: 'Rejestracja'}) %>
+<%- include('../partials/nav', {currentPage: ''}) %>
+<div class="auth-page">
+  <div class="auth-card">
+    <h1>Dołącz do nas</h1>
+    <p>Stwórz konto i bądź na bieżąco z IT.</p>
+    <%- include('../partials/flash') %>
+    <form action="/auth/register" method="POST">
+      <div class="form-group">
+        <label class="form-label" for="username">Nazwa użytkownika</label>
+        <input class="form-input" type="text" id="username" name="username" placeholder="jan_kowalski" required minlength="3" maxlength="30">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="display_name">Imię / pseudonim (opcjonalne)</label>
+        <input class="form-input" type="text" id="display_name" name="display_name" placeholder="Jan Kowalski">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="email">Email</label>
+        <input class="form-input" type="email" id="email" name="email" placeholder="ty@example.com" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="password">Hasło</label>
+        <input class="form-input" type="password" id="password" name="password" placeholder="min. 8 znaków" required minlength="8">
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:var(--space-3)">Utwórz konto</button>
+    </form>
+    <div class="auth-footer">Masz już konto? <a href="/auth/login">Zaloguj się</a></div>
+  </div>
+</div>
+<%- include('../partials/footer') %>

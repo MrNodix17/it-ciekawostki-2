@@ -1,0 +1,32 @@
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-mark">IT</div>
+      IT Ciekawostki
+    </a>
+    <ul class="nav-links">
+      <li><a href="/" class="<%= typeof currentPage !== 'undefined' && currentPage === 'home' ? 'active' : '' %>">Strona główna</a></li>
+      <li><a href="/artykuly" class="<%= typeof currentPage !== 'undefined' && currentPage === 'articles' ? 'active' : '' %>">Artykuły</a></li>
+      <li><a href="/users/szukaj" class="<%= typeof currentPage !== 'undefined' && currentPage === 'users' ? 'active' : '' %>">Społeczność</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" data-theme-toggle aria-label="Przełącz motyw">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <% if (user) { %>
+        <div class="nav-user">
+          <a href="/dashboard" style="text-decoration:none;display:flex;align-items:center;gap:8px;color:inherit;">
+            <div class="nav-avatar"><%= user.display_name ? user.display_name[0].toUpperCase() : user.username[0].toUpperCase() %></div>
+            <span style="font-size:var(--text-sm);color:var(--color-text-muted)"><%= user.display_name || user.username %></span>
+          </a>
+          <form action="/auth/logout" method="POST" style="display:inline">
+            <button class="btn btn-ghost btn-sm">Wyloguj</button>
+          </form>
+        </div>
+      <% } else { %>
+        <a href="/auth/login" class="btn btn-ghost btn-sm">Logowanie</a>
+        <a href="/auth/register" class="btn btn-primary btn-sm">Dołącz</a>
+      <% } %>
+    </div>
+  </div>
+</nav>

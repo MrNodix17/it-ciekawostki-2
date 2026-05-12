@@ -1,0 +1,51 @@
+<%- include('../partials/head', {title: 'Artykuły'}) %>
+<%- include('../partials/nav', {currentPage: 'articles'}) %>
+<div class="container section">
+  <%- include('../partials/flash') %>
+  <div class="section-header">
+    <h1 class="section-title">📚 Artykuły IT</h1>
+  </div>
+  <!-- Filtry kategorii -->
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:var(--space-8)">
+    <a href="/artykuly" class="btn <%= !currentCategory ? 'btn-primary' : 'btn-secondary' %> btn-sm">Wszystkie</a>
+    <% ['DevOps','Bazy danych','Bezpieczeństwo','Sieci','AI','Web','Systemy'].forEach(function(cat){ %>
+    <a href="/artykuly?kategoria=<%= cat %>" class="btn <%= currentCategory === cat ? 'btn-primary' : 'btn-secondary' %> btn-sm"><%= cat %></a>
+    <% }); %>
+  </div>
+  <% if (articles && articles.length > 0) { %>
+  <div class="articles-grid">
+    <% articles.forEach(function(a) { %>
+    <article class="card">
+      <div class="card-emoji"><%= a.cover_emoji || '💡' %></div>
+      <div class="card-category"><%= a.category %></div>
+      <h3 class="card-title"><a href="/artykuly/<%= a.slug %>"><%= a.title %></a></h3>
+      <p class="card-excerpt"><%= a.excerpt %></p>
+      <div class="card-tags">
+        <% if(a.tags){ a.tags.slice(0,3).forEach(function(tag){ %><span class="tag">#<%= tag %></span><% }); } %>
+      </div>
+      <div class="card-meta">
+        <span>👁 <%= a.views || 0 %></span>
+        <span>❤️ <%= 0 %></span>
+        <span>💬 <%= 0 %></span>
+      </div>
+    </article>
+    <% }); %>
+  </div>
+  <!-- Paginacja -->
+  <% if (totalPages > 1) { %>
+  <div class="pagination">
+    <% for(var i=1;i<=totalPages;i++){ %>
+    <a href="/artykuly?strona=<%= i %><%= currentCategory ? '&kategoria='+currentCategory : '' %>"
+       class="page-btn <%= currentPage === i ? 'active' : '' %>"><%= i %></a>
+    <% } %>
+  </div>
+  <% } %>
+  <% } else { %>
+  <div class="empty">
+    <div class="empty-icon">📭</div>
+    <h3>Brak artykułów</h3>
+    <p>W tej kategorii nie ma jeszcze artykułów.</p>
+  </div>
+  <% } %>
+</div>
+<%- include('../partials/footer') %>

@@ -1,0 +1,30 @@
+<%- include('../partials/head', {title: '@' + profileUser.username}) %>
+<%- include('../partials/nav', {currentPage: 'users'}) %>
+<div class="container">
+  <%- include('../partials/flash') %>
+  <div class="profile-header">
+    <div class="profile-big-avatar"><%= profileUser.username[0].toUpperCase() %></div>
+    <div>
+      <h1 style="font-family:var(--font-display);font-size:var(--text-xl)"><%= profileUser.display_name || profileUser.username %></h1>
+      <div style="font-size:var(--text-sm);color:var(--color-text-muted);margin-bottom:var(--space-4)">@<%= profileUser.username %></div>
+      <% if (user && user.id !== profileUser.id) { %>
+        <% if (friendshipStatus === 'accepted') { %>
+          <span class="badge badge-accepted">✓ Znajomy</span>
+        <% } else if (friendshipStatus === 'pending') { %>
+          <span class="badge badge-pending">Zaproszenie wysłane</span>
+        <% } else { %>
+          <form action="/users/znajomy/dodaj" method="POST" style="display:inline">
+            <input type="hidden" name="targetId" value="<%= profileUser.id %>">
+            <button class="btn btn-primary btn-sm">+ Dodaj do znajomych</button>
+          </form>
+        <% } %>
+      <% } %>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div style="display:grid;grid-template-columns:repeat(2,auto);gap:var(--space-8);max-width:300px;margin-block:var(--space-8)">
+    <div class="stat-card"><div class="stat-value"><%= friendsCount || 0 %></div><div class="stat-label">Znajomych</div></div>
+    <div class="stat-card"><div class="stat-value"><%= newsletterStatus ? '✓' : '—' %></div><div class="stat-label">Newsletter</div></div>
+  </div>
+</div>
+<%- include('../partials/footer') %>
