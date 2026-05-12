@@ -35,10 +35,10 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     ports:
-      - "${PORT:-7125}:7125"
+      - "${PORT:-7126}:7126"
     environment:
       NODE_ENV: production
-      PORT: 7125
+      PORT: 7126
       DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/it_portal
       REDIS_URL: redis://redis:6379
       SESSION_SECRET: ${SESSION_SECRET:-dev-secret-CHANGE-IN-PRODUCTION-abc123xyz789}
