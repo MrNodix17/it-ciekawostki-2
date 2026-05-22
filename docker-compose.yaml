@@ -38,6 +38,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: '${APP_IMAGE:-it-ciekawostki2:latest}'
     restart: unless-stopped
     environment:
       NODE_ENV: production
